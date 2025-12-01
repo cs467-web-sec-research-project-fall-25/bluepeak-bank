@@ -26,7 +26,11 @@ export default function Accounts() {
         if (res.data && res.data.success) setAccounts(res.data.data || []);
         else setError(res.data?.message || "Failed to load accounts");
       } catch (err) {
-        setError(err.response?.data?.message || err.message || "Error fetching accounts");
+        setError(
+          err.response?.data?.message ||
+            err.message ||
+            "Error fetching accounts"
+        );
       } finally {
         setLoadingAccounts(false);
       }
@@ -40,7 +44,9 @@ export default function Accounts() {
   return (
     <div className="min-h-screen flex flex-col items-center justify-center bg-neutral-50 py-8 gap-6">
       <div className="bg-gray-800 rounded-lg shadow-lg p-8 max-w-3xl w-full">
-        <h2 className="text-2xl font-semibold text-white mb-4">Your Accounts</h2>
+        <h2 className="text-2xl font-semibold text-white mb-4">
+          Your Accounts
+        </h2>
 
         {isLoading ? (
           <div className="text-sm text-gray-300">Loading accounts…</div>
@@ -80,12 +86,19 @@ export default function Accounts() {
                       setAddBalance(0);
                       setShowAdd(false);
                       const r = await api.get(`/accounts`);
-                      if (r.data && r.data.success) setAccounts(r.data.data || []);
+                      if (r.data && r.data.success)
+                        setAccounts(r.data.data || []);
                     } else {
-                      setMessage(res.data?.message || "Failed to create account");
+                      setMessage(
+                        res.data?.message || "Failed to create account"
+                      );
                     }
                   } catch (err) {
-                    setMessage(err.response?.data?.message || err.message || "Error creating account");
+                    setMessage(
+                      err.response?.data?.message ||
+                        err.message ||
+                        "Error creating account"
+                    );
                   } finally {
                     setAdding(false);
                   }
@@ -100,7 +113,11 @@ export default function Accounts() {
                   required
                 />
                 <div className="flex gap-2">
-                  <select value={addType} onChange={(e) => setAddType(e.target.value)} className="px-3 py-2 rounded bg-gray-900 text-gray-100">
+                  <select
+                    value={addType}
+                    onChange={(e) => setAddType(e.target.value)}
+                    className="px-3 py-2 rounded bg-gray-900 text-gray-100"
+                  >
                     <option value="checking">Checking</option>
                     <option value="saving">Saving</option>
                   </select>
@@ -114,7 +131,10 @@ export default function Accounts() {
                   />
                 </div>
                 <div>
-                  <button disabled={adding} className="px-3 py-2 bg-blue-600 rounded text-white">
+                  <button
+                    disabled={adding}
+                    className="px-3 py-2 bg-blue-600 rounded text-white"
+                  >
                     {adding ? "Adding…" : "Create Account"}
                   </button>
                 </div>
@@ -157,12 +177,19 @@ export default function Accounts() {
                       setAddBalance(0);
                       setShowAdd(false);
                       const r = await api.get(`/accounts`);
-                      if (r.data && r.data.success) setAccounts(r.data.data || []);
+                      if (r.data && r.data.success)
+                        setAccounts(r.data.data || []);
                     } else {
-                      setMessage(res.data?.message || "Failed to create account");
+                      setMessage(
+                        res.data?.message || "Failed to create account"
+                      );
                     }
                   } catch (err) {
-                    setMessage(err.response?.data?.message || err.message || "Error creating account");
+                    setMessage(
+                      err.response?.data?.message ||
+                        err.message ||
+                        "Error creating account"
+                    );
                   } finally {
                     setAdding(false);
                   }
@@ -177,7 +204,11 @@ export default function Accounts() {
                   required
                 />
                 <div className="flex gap-2">
-                  <select value={addType} onChange={(e) => setAddType(e.target.value)} className="px-3 py-2 rounded bg-gray-900 text-gray-100">
+                  <select
+                    value={addType}
+                    onChange={(e) => setAddType(e.target.value)}
+                    className="px-3 py-2 rounded bg-gray-900 text-gray-100"
+                  >
                     <option value="checking">Checking</option>
                     <option value="saving">Saving</option>
                   </select>
@@ -191,7 +222,10 @@ export default function Accounts() {
                   />
                 </div>
                 <div>
-                  <button disabled={adding} className="px-3 py-2 bg-blue-600 rounded text-white">
+                  <button
+                    disabled={adding}
+                    className="px-3 py-2 bg-blue-600 rounded text-white"
+                  >
                     {adding ? "Adding…" : "Create Account"}
                   </button>
                 </div>
@@ -207,29 +241,49 @@ export default function Accounts() {
 
               <ul>
                 {accounts.map((a) => (
-                  <li key={a.accountid} className="grid grid-cols-3 gap-4 items-center px-4 py-3 hover:bg-gray-800">
-                    <div className="text-gray-200">{a.type || `Account ${a.accountid}`}</div>
-                    <div className="text-gray-200">{a.name || `Account ${a.accountid}`}</div>
+                  <li
+                    key={a.accountid}
+                    className="grid grid-cols-3 gap-4 items-center px-4 py-3 hover:bg-gray-800"
+                  >
+                    <div className="text-gray-200">
+                      {a.type || `Account ${a.accountid}`}
+                    </div>
+                    <div className="text-gray-200">
+                      {a.name || `Account ${a.accountid}`}
+                    </div>
                     <div className="flex items-center justify-end gap-3">
-                      <div className="text-white font-medium">${Number(a.balance || 0).toFixed(2)}</div>
+                      <div className="text-white font-medium">
+                        ${Number(a.balance || 0).toFixed(2)}
+                      </div>
                       <button
                         className="px-3 py-1 bg-red-600 rounded hover:bg-red-700 text-white text-sm"
                         onClick={async () => {
                           setMessage("");
-                          const confirmed = window.confirm("Are you sure you want to delete your account? All account balances must be zero first.");
+                          const confirmed = window.confirm(
+                            "Are you sure you want to delete your account? All account balances must be zero first."
+                          );
                           if (!confirmed) return;
                           try {
                             setDeleting(a.accountid);
-                            const res = await api.delete(`/accounts/${a.accountid}`);
+                            const res = await api.delete(
+                              `/accounts/${a.accountid}`
+                            );
                             if (res.data && res.data.success) {
                               setMessage("Account deleted successfully");
                               const r = await api.get(`/accounts`);
-                              if (r.data && r.data.success) setAccounts(r.data.data || []);
+                              if (r.data && r.data.success)
+                                setAccounts(r.data.data || []);
                             } else {
-                              setMessage(res.data?.message || "Failed to delete account");
+                              setMessage(
+                                res.data?.message || "Failed to delete account"
+                              );
                             }
                           } catch (err) {
-                            setMessage(err.response?.data?.message || err.message || "Error deleting account");
+                            setMessage(
+                              err.response?.data?.message ||
+                                err.message ||
+                                "Error deleting account"
+                            );
                           } finally {
                             setDeleting(null);
                           }
@@ -243,7 +297,9 @@ export default function Accounts() {
                 ))}
               </ul>
             </div>
-            {message && <div className="mt-3 text-sm text-yellow-200">{message}</div>}
+            {message && (
+              <div className="mt-3 text-sm text-yellow-200">{message}</div>
+            )}
           </div>
         )}
       </div>

@@ -20,19 +20,17 @@ export default function SignUp({ onLogin }) {
 
     setName(name.trim());
     setEmail(email.trim());
-    
+
     setLoading(true);
     try {
       const payload = { name, email, password };
       const res = await api.post("/auth/register", payload);
       const body = res.data;
       if (body && body.success) {
-        // Grab server message (e.g., "User registered. Verify OTP sent to email.")
         const serverMessage = body?.message || "Registration succeeded";
 
         // After signup, redirect the user to the verify page so they can enter
-        // the OTP emailed to them. Prefill the email and include the server
-        // message so Verify can display it.
+        // the OTP emailed to them. Prefill the email field.
         navigate("/verify", { state: { email, message: serverMessage } });
       } else {
         setError(body?.message || "Registration failed");
@@ -47,10 +45,14 @@ export default function SignUp({ onLogin }) {
   return (
     <div className="min-h-screen flex flex-col items-center justify-center bg-white py-8 gap-6">
       <div className="bg-white rounded-lg shadow-lg p-6 max-w-md w-full">
-        <h2 className="text-xl font-semibold text-gray-900 mb-4">Create an account</h2>
+        <h2 className="text-xl font-semibold text-gray-900 mb-4">
+          Create an account
+        </h2>
         <form onSubmit={submit} className="space-y-4">
           <div>
-            <label className="block text-sm font-medium text-gray-700 mb-1">Username</label>
+            <label className="block text-sm font-medium text-gray-700 mb-1">
+              Username
+            </label>
             <input
               value={name}
               onChange={(e) => setName(e.target.value)}
@@ -59,7 +61,9 @@ export default function SignUp({ onLogin }) {
             />
           </div>
           <div>
-            <label className="block text-sm font-medium text-gray-700 mb-1">Email</label>
+            <label className="block text-sm font-medium text-gray-700 mb-1">
+              Email
+            </label>
             <input
               value={email}
               onChange={(e) => setEmail(e.target.value)}
@@ -69,7 +73,9 @@ export default function SignUp({ onLogin }) {
             />
           </div>
           <div>
-            <label className="block text-sm font-medium text-gray-700 mb-1">Password</label>
+            <label className="block text-sm font-medium text-gray-700 mb-1">
+              Password
+            </label>
             <input
               value={password}
               onChange={(e) => setPassword(e.target.value)}
@@ -93,7 +99,12 @@ export default function SignUp({ onLogin }) {
         </form>
         <div className="mt-4 text-sm text-center">
           <span className="text-gray-600">Already have an account? </span>
-          <button onClick={() => navigate('/login')} className="text-blue-600 hover:underline">Sign in</button>
+          <button
+            onClick={() => navigate("/login")}
+            className="text-blue-600 hover:underline"
+          >
+            Sign in
+          </button>
         </div>
       </div>
     </div>

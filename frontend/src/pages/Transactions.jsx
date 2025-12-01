@@ -21,7 +21,8 @@ export default function Transactions({ accounts = [] }) {
         if (res.data && res.data.success) {
           const list = res.data.data || [];
           setAccountsState(list);
-          if (!accountId && list.length) setAccountId(list[0].accountid || list[0].id || "");
+          if (!accountId && list.length)
+            setAccountId(list[0].accountid || list[0].id || "");
         }
       } catch (err) {
         console.error("Failed to fetch accounts for transactions:", err);
@@ -46,7 +47,9 @@ export default function Transactions({ accounts = [] }) {
         if (res.data && res.data.success) {
           const all = res.data.data || [];
           const filtered = all.filter(
-            (t) => String(t.srcid) === String(accountId) || String(t.desid) === String(accountId)
+            (t) =>
+              String(t.srcid) === String(accountId) ||
+              String(t.desid) === String(accountId)
           );
           setTransactions(filtered);
         } else {
@@ -83,11 +86,19 @@ export default function Transactions({ accounts = [] }) {
   };
 
   if (loading || loadingAccounts) {
-    return <div className="min-h-screen flex items-center justify-center">Loading...</div>;
+    return (
+      <div className="min-h-screen flex items-center justify-center">
+        Loading...
+      </div>
+    );
   }
 
   if (!auth) {
-    return <div className="min-h-screen flex items-center justify-center">Please sign in to view transactions.</div>;
+    return (
+      <div className="min-h-screen flex items-center justify-center">
+        Please sign in to view transactions.
+      </div>
+    );
   }
 
   return (
@@ -103,7 +114,8 @@ export default function Transactions({ accounts = [] }) {
             >
               {accountsState.map((a) => (
                 <option key={a.accountid || a.id} value={a.accountid || a.id}>
-                  {a.type || `Account ${a.accountid || a.id}`} (${Number(a.balance || 0).toFixed(2)})
+                  {a.type || `Account ${a.accountid || a.id}`} ($
+                  {Number(a.balance || 0).toFixed(2)})
                 </option>
               ))}
             </select>
@@ -135,15 +147,28 @@ export default function Transactions({ accounts = [] }) {
               )}
 
               {transactions.map((t) => {
-                const srcAcc = accountsState.find((a) => String(a.accountid || a.id) === String(t.srcid));
-                const desAcc = accountsState.find((a) => String(a.accountid || a.id) === String(t.desid));
+                const srcAcc = accountsState.find(
+                  (a) => String(a.accountid || a.id) === String(t.srcid)
+                );
+                const desAcc = accountsState.find(
+                  (a) => String(a.accountid || a.id) === String(t.desid)
+                );
                 const srcType = t.src_type || (srcAcc && srcAcc.type) || "-";
                 const desType = t.des_type || (desAcc && desAcc.type) || "-";
                 const SYS_ID = 1;
-                const srcLabel = Number(t.srcid) === SYS_ID ? capitalize(t.type) : capitalize(srcType);
-                const desLabel = Number(t.desid) === SYS_ID ? capitalize(t.type) : capitalize(desType);
+                const srcLabel =
+                  Number(t.srcid) === SYS_ID
+                    ? capitalize(t.type)
+                    : capitalize(srcType);
+                const desLabel =
+                  Number(t.desid) === SYS_ID
+                    ? capitalize(t.type)
+                    : capitalize(desType);
                 return (
-                  <tr key={t.transactionid} className="border-b border-gray-700">
+                  <tr
+                    key={t.transactionid}
+                    className="border-b border-gray-700"
+                  >
                     <td className="py-2">{formatTime(t)}</td>
                     <td className="py-2">{capitalize(t.type)}</td>
                     <td className="py-2">{srcLabel}</td>

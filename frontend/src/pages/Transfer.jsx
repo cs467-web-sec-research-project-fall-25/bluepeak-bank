@@ -6,7 +6,7 @@ export default function Transfer({ accounts = [], onTransfer }) {
   const { loading } = useAuth();
   const [accountsState, setAccountsState] = useState(accounts || []);
 
-  const [action, setAction] = useState("transfer"); // transfer, deposit, withdraw
+  const [action, setAction] = useState("transfer");
   const [fromId, setFromId] = useState("");
   const [toId, setToId] = useState("");
   const [recipientEmail, setRecipientEmail] = useState("");
@@ -55,7 +55,9 @@ export default function Transfer({ accounts = [], onTransfer }) {
         setMessage("Cannot transfer to the same account");
         return;
       }
-      const from = accountsState.find((a) => String(a.accountid) === String(fromId));
+      const from = accountsState.find(
+        (a) => String(a.accountid) === String(fromId)
+      );
       if (!from || Number(from.balance) < num) {
         setMessage("Insufficient funds");
         return;
@@ -72,27 +74,31 @@ export default function Transfer({ accounts = [], onTransfer }) {
         setMessage("Please pick a source account");
         return;
       }
-      const from = accountsState.find((a) => String(a.accountid) === String(fromId));
+      const from = accountsState.find(
+        (a) => String(a.accountid) === String(fromId)
+      );
       if (!from || Number(from.balance) < num) {
         setMessage("Insufficient funds");
         return;
       }
     }
 
-    if (action === 'transfer-user') {
+    if (action === "transfer-user") {
       if (!fromId || !recipientEmail) {
-        setMessage('Please pick a source account and enter recipient email');
+        setMessage("Please pick a source account and enter recipient email");
         return;
       }
-      const from = accountsState.find((a) => String(a.accountid) === String(fromId));
+      const from = accountsState.find(
+        (a) => String(a.accountid) === String(fromId)
+      );
       if (!from || Number(from.balance) < num) {
-        setMessage('Insufficient funds');
+        setMessage("Insufficient funds");
         return;
       }
       const email = recipientEmail.trim();
       const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
       if (!emailRegex.test(email)) {
-        setMessage('Please enter a valid recipient email');
+        setMessage("Please enter a valid recipient email");
         return;
       }
     }
@@ -101,18 +107,27 @@ export default function Transfer({ accounts = [], onTransfer }) {
       setSubmitting(true);
 
       if (action === "transfer") {
-        const payload = { srcId: Number(fromId), desId: Number(toId), amount: num };
+        const payload = {
+          srcId: Number(fromId),
+          desId: Number(toId),
+          amount: num,
+        };
         const res = await api.post(`/transactions/transfer`, payload);
         if (res.data && res.data.success) {
           setMessage("Transfer complete");
           setAmount("");
           setFromId("");
           setToId("");
-          if (typeof onTransfer === "function") onTransfer({ type: 'transfer', fromId: Number(fromId), toId: Number(toId), amount: num });
+          if (typeof onTransfer === "function")
+            onTransfer({
+              type: "transfer",
+              fromId: Number(fromId),
+              toId: Number(toId),
+              amount: num,
+            });
         } else {
           setMessage(res.data?.message || "Transfer failed");
         }
-
       } else if (action === "deposit") {
         const payload = { accountId: Number(toId), amount: num };
         const res = await api.post(`/transactions/deposit`, payload);
@@ -120,11 +135,15 @@ export default function Transfer({ accounts = [], onTransfer }) {
           setMessage("Deposit complete");
           setAmount("");
           setToId("");
-          if (typeof onTransfer === "function") onTransfer({ type: 'deposit', accountId: Number(toId), amount: num });
+          if (typeof onTransfer === "function")
+            onTransfer({
+              type: "deposit",
+              accountId: Number(toId),
+              amount: num,
+            });
         } else {
           setMessage(res.data?.message || "Deposit failed");
         }
-
       } else if (action === "withdraw") {
         const payload = { accountId: Number(fromId), amount: num };
         const res = await api.post(`/transactions/withdraw`, payload);
@@ -132,28 +151,45 @@ export default function Transfer({ accounts = [], onTransfer }) {
           setMessage("Withdrawal complete");
           setAmount("");
           setFromId("");
-          if (typeof onTransfer === "function") onTransfer({ type: 'withdraw', accountId: Number(fromId), amount: num });
+          if (typeof onTransfer === "function")
+            onTransfer({
+              type: "withdraw",
+              accountId: Number(fromId),
+              amount: num,
+            });
         } else {
           setMessage(res.data?.message || "Withdraw failed");
         }
-
-      } else if (action === 'transfer-user') {
+      } else if (action === "transfer-user") {
         const email = recipientEmail.trim();
-        const payload = { srcid: Number(fromId), toUserEmail: email, amount: num };
-        const res = await api.post(`/transactions/send`, payload, { withCredentials: true });
+        const payload = {
+          srcid: Number(fromId),
+          toUserEmail: email,
+          amount: num,
+        };
+        const res = await api.post(`/transactions/send`, payload, {
+          withCredentials: true,
+        });
         if (res.data && res.data.success) {
-          setMessage('Transfer to user complete');
-          setAmount('');
+          setMessage("Transfer to user complete");
+          setAmount("");
           setFromId("");
-          setRecipientEmail('');
-          if (typeof onTransfer === 'function') onTransfer({ type: 'transfer-user', fromId: Number(fromId), toUserEmail: email, amount: num });
+          setRecipientEmail("");
+          if (typeof onTransfer === "function")
+            onTransfer({
+              type: "transfer-user",
+              fromId: Number(fromId),
+              toUserEmail: email,
+              amount: num,
+            });
         } else {
-          setMessage(res.data?.message || 'Transfer failed');
+          setMessage(res.data?.message || "Transfer failed");
         }
       }
-
     } catch (err) {
-      setMessage(err.response?.data?.message || err.message || "Transaction error");
+      setMessage(
+        err.response?.data?.message || err.message || "Transaction error"
+      );
     } finally {
       setSubmitting(false);
     }
@@ -167,7 +203,9 @@ export default function Transfer({ accounts = [], onTransfer }) {
         </h2>
 
         <div className="mb-4">
-          <label className="block text-sm font-medium text-gray-200 mb-1">Action</label>
+          <label className="block text-sm font-medium text-gray-200 mb-1">
+            Action
+          </label>
           <select
             value={action}
             onChange={(e) => setAction(e.target.value)}
@@ -181,9 +219,13 @@ export default function Transfer({ accounts = [], onTransfer }) {
         </div>
 
         <form onSubmit={send} className="space-y-4">
-          {(action === 'transfer' || action === 'withdraw' || action === 'transfer-user') && (
+          {(action === "transfer" ||
+            action === "withdraw" ||
+            action === "transfer-user") && (
             <div>
-              <label className="block text-sm font-medium text-gray-200 mb-1">From</label>
+              <label className="block text-sm font-medium text-gray-200 mb-1">
+                From
+              </label>
               <select
                 value={fromId}
                 onChange={(e) => setFromId(e.target.value)}
@@ -194,16 +236,20 @@ export default function Transfer({ accounts = [], onTransfer }) {
                   const id = a.accountid;
                   const label = a.name || `Account ${id}`;
                   return (
-                    <option key={id} value={id}>{label} (${Number(a.balance || 0).toFixed(2)})</option>
+                    <option key={id} value={id}>
+                      {label} (${Number(a.balance || 0).toFixed(2)})
+                    </option>
                   );
                 })}
               </select>
             </div>
           )}
 
-          {(action === 'transfer' || action === 'deposit') && (
+          {(action === "transfer" || action === "deposit") && (
             <div>
-              <label className="block text-sm font-medium text-gray-200 mb-1">To</label>
+              <label className="block text-sm font-medium text-gray-200 mb-1">
+                To
+              </label>
               <select
                 value={toId}
                 onChange={(e) => setToId(e.target.value)}
@@ -214,28 +260,37 @@ export default function Transfer({ accounts = [], onTransfer }) {
                   const id = a.accountid;
                   const label = a.name || `Account ${id}`;
                   return (
-                    <option key={id} value={id}>{label} (${Number(a.balance || 0).toFixed(2)})</option>
+                    <option key={id} value={id}>
+                      {label} (${Number(a.balance || 0).toFixed(2)})
+                    </option>
                   );
                 })}
               </select>
             </div>
           )}
 
-          {action === 'transfer-user' && (
+          {action === "transfer-user" && (
             <div>
-              <label className="block text-sm font-medium text-gray-200 mb-1">Recipient email</label>
+              <label className="block text-sm font-medium text-gray-200 mb-1">
+                Recipient email
+              </label>
               <input
                 value={recipientEmail}
                 onChange={(e) => setRecipientEmail(e.target.value)}
                 placeholder="recipient@example.com"
                 className="w-full px-3 py-2 border border-gray-700 rounded-md bg-gray-900 text-gray-100"
               />
-              <p className="text-xs text-gray-400 mt-1">Enter the recipient's email to transfer to one of their accounts.</p>
+              <p className="text-xs text-gray-400 mt-1">
+                Enter the recipient's email to transfer to one of their
+                accounts.
+              </p>
             </div>
           )}
 
           <div>
-            <label className="block text-sm font-medium text-gray-200 mb-1">Amount</label>
+            <label className="block text-sm font-medium text-gray-200 mb-1">
+              Amount
+            </label>
             <input
               value={amount}
               onChange={(e) => setAmount(e.target.value)}
@@ -244,20 +299,20 @@ export default function Transfer({ accounts = [], onTransfer }) {
           </div>
 
           <div>
-              <button
+            <button
               className="w-full bg-blue-600 hover:bg-blue-700 text-white px-4 py-2 rounded-md"
               type="submit"
-                disabled={submitting}
+              disabled={submitting}
             >
               {submitting
                 ? "Processing…"
-                : action === 'transfer'
-                ? 'Send Transfer'
-                : action === 'transfer-user'
-                ? 'Send Transfer (to user)'
-                : action === 'deposit'
-                ? 'Make Deposit'
-                : 'Withdraw'}
+                : action === "transfer"
+                ? "Send Transfer"
+                : action === "transfer-user"
+                ? "Send Transfer (to user)"
+                : action === "deposit"
+                ? "Make Deposit"
+                : "Withdraw"}
             </button>
           </div>
         </form>

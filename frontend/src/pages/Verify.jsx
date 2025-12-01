@@ -24,7 +24,6 @@ export default function Verify() {
     try {
       setLoading(true);
       if (isNewEmail) {
-        // verify new email flow uses different endpoint and payload
         const res = await api.post("/auth/verify-newemail-otp", { newemail: email, otp });
         if (res.data && res.data.success) {
           setMessage(res.data.message || "New email verified successfully");
@@ -48,7 +47,6 @@ export default function Verify() {
         const res = await api.post("/verify-email", { email, otp });
         if (res.data && res.data.success) {
           setMessage(res.data.message || "Verified successfully");
-          // optionally redirect to login
           setTimeout(() => navigate("/login"), 900);
         } else {
           setMessage(res.data?.message || "Verification failed");

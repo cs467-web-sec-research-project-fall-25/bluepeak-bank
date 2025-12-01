@@ -4,21 +4,6 @@ Includes: Users, Accounts, Transactions
 */
 
 -- ============================================
--- EVENT SEEDS
--- ============================================
--- Events are recorded in user events. 
--- Events must be initialized first so triggers can find the event ID to record actions.
-INSERT INTO events (event)
-VALUES
-('Account Created'),
-('Successful Authentication'),
-('Failed Authentication'),
-('Account Locked'),
-('Account Unlocked'),
-('Log Out'),
-('Password Updated');
-
--- ============================================
 -- USERS SEED
 -- ============================================
 -- Passwords here are plain text for example purposes.

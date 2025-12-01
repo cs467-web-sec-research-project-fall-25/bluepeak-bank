@@ -392,6 +392,8 @@ export const refreshAccessToken = async (req, res) => {
 
 
 // Logout the user 
+// clears the referesh token.
+// access token remains active till expiration.
 export const logout = async (req, res) => {
 
   try {
@@ -470,7 +472,7 @@ export const updatePassword = async (req, res, next) => {
       parallelism: 1
     });
 
-    // Mark oldpassowrd as not current
+    // Mark old passowrd as not current
     await pool.query("BEGIN")
 
     await pool.query(

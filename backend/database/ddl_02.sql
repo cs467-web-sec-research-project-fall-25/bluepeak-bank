@@ -119,6 +119,18 @@ CREATE TABLE IF NOT EXISTS transactions (
 INSERT INTO accounts (userid, name, type, balance)
 VALUES (NULL, 'SYS_ACC', 'checking', 0.00);
 
+-- Events are recorded in userevents. 
+-- Events must be initialized first so triggers can find the event ID to record actions.
+INSERT INTO events (event)
+VALUES
+('Account Created'),
+('Successful Authentication'),
+('Failed Authentication'),
+('Account Locked'),
+('Account Unlocked'),
+('Log Out'),
+('Password Updated');
+
 --################# START DEFINE INDEXES #################
 
 --Fast lookup for a users current password:

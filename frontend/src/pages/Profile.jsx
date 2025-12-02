@@ -9,7 +9,6 @@ const Profile = () => {
   const [error, setError] = useState(null);
   const [editing, setEditing] = useState(false);
 
-  // form states
   const [newName, setNewName] = useState("");
   const [nameStatus, setNameStatus] = useState(null);
 
@@ -31,7 +30,6 @@ const Profile = () => {
     const fetchProfile = async () => {
       try {
         const res = await api.get("/auth/profile", {
-          // `api` already attaches token and credentials via interceptors
           withCredentials: true,
         });
         setProfile(res.data.data);
@@ -76,7 +74,6 @@ const Profile = () => {
                 className="px-3 py-1 bg-blue-600 rounded hover:bg-blue-700 text-white text-sm"
                 onClick={() => {
                   setEditing(!editing);
-                  // reset statuses when toggling
                   setNameStatus(null);
                   setEmailStatus(null);
                   setPasswordStatus(null);
@@ -115,11 +112,17 @@ const Profile = () => {
                           setNameStatus({ ok: true, msg: res.data.message });
                           setNewName("");
                         } else {
-                          setNameStatus({ ok: false, msg: res.data.message || "Update failed" });
+                          setNameStatus({
+                            ok: false,
+                            msg: res.data.message || "Update failed",
+                          });
                         }
                       } catch (err) {
                         console.error(err);
-                        setNameStatus({ ok: false, msg: err?.response?.data?.message || "Server error" });
+                        setNameStatus({
+                          ok: false,
+                          msg: err?.response?.data?.message || "Server error",
+                        });
                       }
                     }}
                     disabled={!newName.trim()}
@@ -128,7 +131,11 @@ const Profile = () => {
                   </button>
                 </div>
                 {nameStatus && (
-                  <p className={`mt-2 text-sm ${nameStatus.ok ? "text-green-400" : "text-red-400"}`}>
+                  <p
+                    className={`mt-2 text-sm ${
+                      nameStatus.ok ? "text-green-400" : "text-red-400"
+                    }`}
+                  >
                     {nameStatus.msg}
                   </p>
                 )}
@@ -138,7 +145,11 @@ const Profile = () => {
               <div>
                 <h3 className="text-sm text-gray-300 mb-2">Update Email</h3>
                 <div className="grid grid-cols-1 md:grid-cols-3 gap-2">
-                  <input className="p-2 rounded bg-gray-800 text-white text-sm" value={auth.email} readOnly />
+                  <input
+                    className="p-2 rounded bg-gray-800 text-white text-sm"
+                    value={auth.email}
+                    readOnly
+                  />
                   <input
                     className="p-2 rounded bg-gray-800 text-white text-sm"
                     placeholder="Current password"
@@ -167,17 +178,28 @@ const Profile = () => {
                         });
                         if (res.data?.success) {
                           // backend issues OTP to new email; redirect to verify page so user can complete verification
-                          setEmailStatus({ ok: true, msg: res.data.message || "OTP sent to new email" });
-                          // navigate to verify page and prefill the email field (mark as newemail flow)
-                          navigate("/verify", { state: { email: newEmail, mode: "newemail" } });
+                          setEmailStatus({
+                            ok: true,
+                            msg: res.data.message || "OTP sent to new email",
+                          });
+                          // navigate to verify page and prefill the email field
+                          navigate("/verify", {
+                            state: { email: newEmail, mode: "newemail" },
+                          });
                           setEmailPassword("");
                           setNewEmail("");
                         } else {
-                          setEmailStatus({ ok: false, msg: res.data.message || "Update failed" });
+                          setEmailStatus({
+                            ok: false,
+                            msg: res.data.message || "Update failed",
+                          });
                         }
                       } catch (err) {
                         console.error(err);
-                        setEmailStatus({ ok: false, msg: err?.response?.data?.message || "Server error" });
+                        setEmailStatus({
+                          ok: false,
+                          msg: err?.response?.data?.message || "Server error",
+                        });
                       }
                     }}
                     disabled={!emailPassword || !newEmail}
@@ -186,7 +208,11 @@ const Profile = () => {
                   </button>
                 </div>
                 {emailStatus && (
-                  <p className={`mt-2 text-sm ${emailStatus.ok ? "text-green-400" : "text-red-400"}`}>
+                  <p
+                    className={`mt-2 text-sm ${
+                      emailStatus.ok ? "text-green-400" : "text-red-400"
+                    }`}
+                  >
                     {emailStatus.msg}
                   </p>
                 )}
@@ -223,15 +249,24 @@ const Profile = () => {
                           newPassword,
                         });
                         if (res.data?.success) {
-                          setPasswordStatus({ ok: true, msg: res.data.message || "Password updated" });
+                          setPasswordStatus({
+                            ok: true,
+                            msg: res.data.message || "Password updated",
+                          });
                           setCurrentPassword("");
                           setNewPassword("");
                         } else {
-                          setPasswordStatus({ ok: false, msg: res.data.message || "Update failed" });
+                          setPasswordStatus({
+                            ok: false,
+                            msg: res.data.message || "Update failed",
+                          });
                         }
                       } catch (err) {
                         console.error(err);
-                        setPasswordStatus({ ok: false, msg: err?.response?.data?.message || "Server error" });
+                        setPasswordStatus({
+                          ok: false,
+                          msg: err?.response?.data?.message || "Server error",
+                        });
                       }
                     }}
                     disabled={!currentPassword || !newPassword}
@@ -240,7 +275,11 @@ const Profile = () => {
                   </button>
                 </div>
                 {passwordStatus && (
-                  <p className={`mt-2 text-sm ${passwordStatus.ok ? "text-green-400" : "text-red-400"}`}>
+                  <p
+                    className={`mt-2 text-sm ${
+                      passwordStatus.ok ? "text-green-400" : "text-red-400"
+                    }`}
+                  >
                     {passwordStatus.msg}
                   </p>
                 )}
@@ -249,7 +288,9 @@ const Profile = () => {
               {/* Delete account */}
               <div>
                 <h3 className="text-sm text-gray-300 mb-2">Delete Account</h3>
-                <p className="text-xs text-gray-400">This will permanently delete your account and data.</p>
+                <p className="text-xs text-gray-400">
+                  This will permanently delete your account and data.
+                </p>
                 <div className="mt-2 grid grid-cols-1 md:grid-cols-2 gap-2">
                   <input
                     className="p-2 rounded bg-gray-800 text-white text-sm"
@@ -267,21 +308,34 @@ const Profile = () => {
                       );
                       if (!confirmed) return;
                       try {
-                        const res = await api.post("/auth/deleteUser", {
-                          email: auth.email,
-                          password: deletePassword,
-                        }, { withCredentials: true });
+                        const res = await api.post(
+                          "/auth/deleteUser",
+                          {
+                            email: auth.email,
+                            password: deletePassword,
+                          },
+                          { withCredentials: true }
+                        );
                         if (res.data?.success) {
-                          setDeleteStatus({ ok: true, msg: res.data.message || "Account deleted" });
+                          setDeleteStatus({
+                            ok: true,
+                            msg: res.data.message || "Account deleted",
+                          });
                           // clear auth and redirect to home/login
                           setAuth(null);
                           window.location.href = "/";
                         } else {
-                          setDeleteStatus({ ok: false, msg: res.data.message || "Delete failed" });
+                          setDeleteStatus({
+                            ok: false,
+                            msg: res.data.message || "Delete failed",
+                          });
                         }
                       } catch (err) {
                         console.error(err);
-                        setDeleteStatus({ ok: false, msg: err?.response?.data?.message || "Server error" });
+                        setDeleteStatus({
+                          ok: false,
+                          msg: err?.response?.data?.message || "Server error",
+                        });
                       }
                     }}
                     disabled={!deletePassword}
@@ -290,7 +344,11 @@ const Profile = () => {
                   </button>
                 </div>
                 {deleteStatus && (
-                  <p className={`mt-2 text-sm ${deleteStatus.ok ? "text-green-400" : "text-red-400"}`}>
+                  <p
+                    className={`mt-2 text-sm ${
+                      deleteStatus.ok ? "text-green-400" : "text-red-400"
+                    }`}
+                  >
                     {deleteStatus.msg}
                   </p>
                 )}

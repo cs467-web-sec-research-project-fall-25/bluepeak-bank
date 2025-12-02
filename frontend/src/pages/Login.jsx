@@ -15,11 +15,10 @@ const Login = () => {
     e.preventDefault();
     try {
       const res = await api.post("/auth/login", form, {
-        withCredentials: true, // important: send/receive cookies
+        withCredentials: true
       });
 
       if (res.data.success) {
-        // Only store the access token in memory
         setAuth({
           accessToken: res.data.data.accessToken,
           userid: res.data.data.userid,
@@ -70,8 +69,13 @@ const Login = () => {
         </button>
       </form>
       <div className="mt-4 text-sm text-center">
-          <span className="text-gray-600">Don't have an account? </span>
-          <button onClick={() => navigate('/signup')} className="text-blue-600 hover:underline">Create one</button>
+        <span className="text-gray-600">Don't have an account? </span>
+        <button
+          onClick={() => navigate("/signup")}
+          className="text-blue-600 hover:underline"
+        >
+          Create one
+        </button>
       </div>
     </div>
   );

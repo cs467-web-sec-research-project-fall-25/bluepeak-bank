@@ -1,4 +1,11 @@
-import { createContext, useContext, useEffect, useState, useRef, useCallback } from "react";
+import {
+  createContext,
+  useContext,
+  useEffect,
+  useState,
+  useRef,
+  useCallback,
+} from "react";
 import api from "../services/api";
 
 // Auth Context
@@ -34,7 +41,9 @@ export const AuthProvider = ({ children }) => {
         let finalUser = { userid, name, email };
         if (!name || !userid) {
           try {
-            const profileRes = await api.get("/auth/profile", { withCredentials: true });
+            const profileRes = await api.get("/auth/profile", {
+              withCredentials: true,
+            });
             if (profileRes.data && profileRes.data.success) {
               finalUser = {
                 userid: profileRes.data.data.userid ?? userid,
@@ -48,19 +57,24 @@ export const AuthProvider = ({ children }) => {
           }
         }
 
-        setAuth({ accessToken, userid: finalUser.userid, name: finalUser.name, email: finalUser.email });
+        setAuth({
+          accessToken,
+          userid: finalUser.userid,
+          name: finalUser.name,
+          email: finalUser.email,
+        });
         return accessToken;
       } else {
         setAuth(null);
         return null;
       }
     } catch (err) {
-     if (err.response?.status === 401) {
-          setAuth(null);
-        } else {
-          console.error("Unexpected refresh token error:", err);
-        }
-        return null;
+      if (err.response?.status === 401) {
+        setAuth(null);
+      } else {
+        console.error("Unexpected refresh token error:", err);
+      }
+      return null;
     } finally {
       setLoading(false);
     }
@@ -70,7 +84,6 @@ export const AuthProvider = ({ children }) => {
   useEffect(() => {
     if (!auth) refreshAccessToken();
   }, [auth, refreshAccessToken]);
-
 
   // Automatic token refresh every 50 seconds (if access token is 1 min)
   useEffect(() => {
@@ -106,7 +119,9 @@ export const AuthProvider = ({ children }) => {
   }, []);
 
   return (
-    <AuthContext.Provider value={{ auth, setAuth, loading, refreshAccessToken }}>
+    <AuthContext.Provider
+      value={{ auth, setAuth, loading, refreshAccessToken }}
+    >
       {children}
     </AuthContext.Provider>
   );
